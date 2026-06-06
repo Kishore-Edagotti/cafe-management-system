@@ -4,6 +4,7 @@ import org.example.cafemanagementsystem.dto.RegisterRequest;
 import org.example.cafemanagementsystem.entity.Role;
 import org.example.cafemanagementsystem.entity.User;
 import org.example.cafemanagementsystem.repository.UserRepo;
+import org.example.cafemanagementsystem.security.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +26,9 @@ public class AuthService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private JWTService jwtService;
+
 
     public String register(RegisterRequest registerRequest){
 
@@ -35,7 +39,8 @@ public class AuthService {
             user.setEmail(registerRequest.getEmail());
             user.setRole(Role.STUDENT);
             userRepo.save(user);
-            return "User Created";
+
+            return "User Created ";
         }
 
         return "Registration Failed: Username or email exits";
@@ -46,7 +51,8 @@ public class AuthService {
                 new UsernamePasswordAuthenticationToken(
                         request.getUsername(),request.getPassword()));
         if(authentication.isAuthenticated()){
-            return "Login Success";
+            System.out.println(authentication.getAuthorities());
+            return jwtService.generateToken(request.getUsername(),authentication.getAuthorities().toString());
         }
         return "Invalid Credentials";
     }
