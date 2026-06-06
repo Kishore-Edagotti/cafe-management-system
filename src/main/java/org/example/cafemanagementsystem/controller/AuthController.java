@@ -1,5 +1,6 @@
 package org.example.cafemanagementsystem.controller;
 
+import org.example.cafemanagementsystem.dto.LoginRequest;
 import org.example.cafemanagementsystem.dto.RegisterRequest;
 import org.example.cafemanagementsystem.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,5 +18,10 @@ public class AuthController {
     @PostMapping("/register")
     public String register(@RequestBody RegisterRequest request){
      return    authService.register(request);
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestBody LoginRequest request){
+        return    authService.login(request);
     }
 }
