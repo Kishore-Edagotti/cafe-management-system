@@ -52,7 +52,7 @@ public class AuthService {
                         request.getUsername(),request.getPassword()));
         if(authentication.isAuthenticated()){
             System.out.println(authentication.getAuthorities());
-            return jwtService.generateToken(request.getUsername(),authentication.getAuthorities().toString());
+            return jwtService.generateToken(request.getUsername(),jwtService.extractRoleByAuthority(authentication.getAuthorities().toString()));
         }
         return "Invalid Credentials";
     }

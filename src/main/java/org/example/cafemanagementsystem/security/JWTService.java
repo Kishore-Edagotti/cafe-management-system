@@ -91,4 +91,16 @@ public class JWTService {
 
         return resolver.apply(claims);
     }
+
+    public String extractRoleByAuthority(String role){
+        String str = role.toLowerCase();
+
+        if(str.contains("admin")){
+            return "ADMIN";
+        } else if (str.contains("vendor")) {
+            return "VENDOR";
+        }
+        return "STUDENT";
+
+    }
 }

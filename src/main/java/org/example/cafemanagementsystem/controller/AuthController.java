@@ -4,6 +4,7 @@ import org.example.cafemanagementsystem.dto.LoginRequest;
 import org.example.cafemanagementsystem.dto.RegisterRequest;
 import org.example.cafemanagementsystem.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -12,10 +13,13 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @GetMapping("/hello")
+    @PreAuthorize("hasAuthority('STUDENT')")
+    @GetMapping("/admin/hello")
     public String hello(){
         return "HELLO";
     }
+
+
 
     @PostMapping("/auth/register")
     public String register(@RequestBody RegisterRequest request){
