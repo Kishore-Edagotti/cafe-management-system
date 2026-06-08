@@ -2,7 +2,9 @@ package org.example.cafemanagementsystem.controller;
 
 import org.example.cafemanagementsystem.dto.LoginRequest;
 import org.example.cafemanagementsystem.dto.RegisterRequest;
+import org.example.cafemanagementsystem.dto.VendorRequestDto;
 import org.example.cafemanagementsystem.service.AuthService;
+import org.example.cafemanagementsystem.service.VendorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +15,21 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+    @Autowired
+    private VendorService vendorService;
+
     @PreAuthorize("hasAuthority('STUDENT')")
-    @GetMapping("/admin/hello")
+    @GetMapping("/student/hello")
     public String hello(){
+
         return "HELLO";
+    }
+
+    @PreAuthorize("hasAuthority('STUDENT')")
+    @PostMapping("/student/hello")
+    public String hello(@RequestBody VendorRequestDto vendorRequestDto){
+
+        return "HELLO"+vendorService.createVendorRequest(vendorRequestDto);
     }
 
 
