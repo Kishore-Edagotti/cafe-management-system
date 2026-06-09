@@ -1,6 +1,4 @@
 package org.example.cafemanagementsystem.controller;
-
-import org.example.cafemanagementsystem.dto.VendorRequestDto;
 import org.example.cafemanagementsystem.entity.Vendor;
 import org.example.cafemanagementsystem.service.VendorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +20,18 @@ public class AdminController {
 
         return vendorService.getPendingVendorRequests();
     }
+    @GetMapping("/vendors/approve")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public List<Vendor> getApprovedVendors() {
+
+        return vendorService.getApprovedVendors();
+    }
+    @GetMapping("/vendors/rejected")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public List<Vendor> getRejectedVendors() {
+
+        return vendorService.getRejectedVendors();
+    }
 
     @PutMapping("/vendors/{id}/approve")
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -38,6 +48,8 @@ public class AdminController {
 
         return vendorService.rejectVendorRequest(id);
     }
+
+
 
 
 }

@@ -81,9 +81,10 @@ public class VendorService {
 
     }
 
+
     public List<Vendor> getPendingVendorRequests(){
 
-        return vendorRepo.findAllByStatus(VendorStatus.APPROVED);
+        return vendorRepo.findAllByStatus(VendorStatus.PENDING);
 
     }
 
@@ -102,6 +103,64 @@ public class VendorService {
 
     public String rejectVendorRequest(Long id) {
 
-        return "approval rejeced";
+        Optional<Vendor> optionalVendor = vendorRepo.findById(id);
+
+        if (optionalVendor.isPresent()){
+            Vendor   vendor  = optionalVendor.get();
+            if(vendor.getStatus() == VendorStatus.REJECTED){
+                return "Vendor already REJECTED";
+            }
+            vendor.setStatus(VendorStatus.REJECTED);
+
+            User user = vendor.getUser();
+            user.setRole(Role.STUDENT);
+
+            userRepo.save(user);
+            vendorRepo.save(vendor);
+
+            return "Vendor approval REJECTED";
+        }
+
+
+
+        return "Vendor Request not Found";
+
+    }
+
+
+    public VendorRequestDto getVendorProfile(Long id) {
+
+        Optional<Vendor> optionalVendor = vendorRepo.findById(id);
+
+        if (optionalVendor.isPresent()){
+            Vendor   vendor  = optionalVendor.get();
+            VendorRequestDto vendorRequestDto = new VendorRequestDto();
+            vendorRequestDto.setDescription(vendor.getDescription());
+            vendorRequestDto.setImageUrl(vendor.getImageUrl());
+            vendorRequestDto.setPhoneNumber(vendor.getPhoneNumber());
+            vendorRequestDto.setBusinessName(vendor.getBusinessName());
+
+            return vendorRequestDto;
+        }
+        return null;
+
+    }
+
+    public String updateVendorProfile(Long id ,VendorRequestDto dto) {
+        Optional<Vendor> optionalVendor = vendorRepo.findById(id);
+
+        if (optionalVendor.isPresent()){
+            Vendor   vendor  = optionalVendor.get();
+           vendor.setBusinessName(dto.getBusinessName());
+           vendor.setDescription(dto.getDescription());
+           vendor.setPhoneNumber(dto.getPhoneNumber());
+           vendor.setImageUrl(dto.getImageUrl());
+           vendorRepo.save(vendor);
+
+            return "Vendor Profile Updated Sucessfull";
+        }
+        return "Vendor not found";
+
+
     }
 }
