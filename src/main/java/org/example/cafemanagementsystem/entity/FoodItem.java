@@ -3,37 +3,35 @@ package org.example.cafemanagementsystem.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
-@Table(name="vendors")
-@Getter
 @Setter
-public class Vendor {
+@Getter
+@Table(name = "food_item")
+public class FoodItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-    @Column(nullable = false,unique = true)
-    private String businessName;
+    @Column(nullable = false)
+    private String foodName;
 
 
     @Column(nullable = false)
-    private String phoneNumber;
+    private Double price;
+
 
     private String description;
 
     private String imageUrl;
 
-    @Enumerated(EnumType.STRING)
-    private VendorStatus status;
+
+    private boolean available;
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -42,11 +40,7 @@ public class Vendor {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "vendor")
-    private List<FoodItem> foodItems;
+    @ManyToOne
+    @JoinColumn(name = "vendor_id")
+    private Vendor vendor;
 }

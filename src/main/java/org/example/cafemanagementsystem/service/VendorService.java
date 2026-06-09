@@ -1,13 +1,13 @@
 package org.example.cafemanagementsystem.service;
 
+import org.example.cafemanagementsystem.dto.AddFoodItemDto;
 import org.example.cafemanagementsystem.dto.VendorRequestDto;
-import org.example.cafemanagementsystem.entity.Role;
-import org.example.cafemanagementsystem.entity.User;
-import org.example.cafemanagementsystem.entity.Vendor;
-import org.example.cafemanagementsystem.entity.VendorStatus;
+import org.example.cafemanagementsystem.entity.*;
+import org.example.cafemanagementsystem.repository.FoodItemRepo;
 import org.example.cafemanagementsystem.repository.UserRepo;
 import org.example.cafemanagementsystem.repository.VendorRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -23,6 +23,9 @@ public class VendorService {
 
     @Autowired
     private VendorRepo vendorRepo;
+
+    @Autowired
+    private FoodItemRepo foodItemRepo;
 
     public String createVendorRequest(VendorRequestDto dto){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -163,4 +166,6 @@ public class VendorService {
 
 
     }
+
+
 }
