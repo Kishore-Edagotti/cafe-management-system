@@ -81,20 +81,7 @@ public class FoodItemService {
 
     public List<FoodItemResponseDto>getVendorMenu() {
 
-        Authentication authentication =
-                SecurityContextHolder
-                        .getContext()
-                        .getAuthentication();
-
-        String username = authentication.getName();
-
-        User user = userRepo.findByUsername(username)
-                .orElseThrow(() ->
-                        new RuntimeException("User not found"));
-
-        Vendor vendor = vendorRepo.findByUser(user)
-                .orElseThrow(() ->
-                        new RuntimeException("Vendor not found"));
+        Vendor vendor = getCurrentVendor();
 
         List<FoodItemResponseDto> response = new ArrayList<>();
         List<FoodItem> foodItemList = foodItemRepo.findAllByVendor(vendor);
@@ -122,21 +109,7 @@ public class FoodItemService {
     public String updateFoodItem(Long foodItemId,
                                  AddFoodItemDto dto) {
 
-        Authentication authentication =
-                SecurityContextHolder
-                        .getContext()
-                        .getAuthentication();
-
-        String username = authentication.getName();
-
-        User user = userRepo.findByUsername(username)
-                .orElseThrow(() ->
-                        new RuntimeException("User not found"));
-
-        Vendor vendor = vendorRepo.findByUser(user)
-                .orElseThrow(() ->
-                        new RuntimeException("Vendor not found"));
-
+        Vendor vendor = getCurrentVendor();
         FoodItem foodItem = foodItemRepo
                 .findByIdAndVendor(foodItemId, vendor)
                 .orElseThrow(() ->
@@ -155,20 +128,7 @@ public class FoodItemService {
 
     public String disableFoodItem(Long foodItemId) {
 
-        Authentication authentication =
-                SecurityContextHolder
-                        .getContext()
-                        .getAuthentication();
-
-        String username = authentication.getName();
-
-        User user = userRepo.findByUsername(username)
-                .orElseThrow(() ->
-                        new RuntimeException("User not found"));
-
-        Vendor vendor = vendorRepo.findByUser(user)
-                .orElseThrow(() ->
-                        new RuntimeException("Vendor not found"));
+        Vendor vendor = getCurrentVendor();
 
         FoodItem foodItem = foodItemRepo
                 .findByIdAndVendor(foodItemId, vendor)
@@ -183,6 +143,36 @@ public class FoodItemService {
     }
     public String enableFoodItem(Long foodItemId) {
 
+
+        Vendor vendor = getCurrentVendor();
+        FoodItem foodItem = foodItemRepo
+                .findByIdAndVendor(foodItemId, vendor)
+                .orElseThrow(() ->
+                        new RuntimeException("Food Item not found"));
+
+        foodItem.setAvailable(true);
+
+        foodItemRepo.save(foodItem);
+
+        return foodItem.getFoodName() + " enabled successfully";
+    }
+
+    public String deleteFoodItem(Long foodItemId){
+
+        Vendor vendor = getCurrentVendor();
+
+        FoodItem foodItem = foodItemRepo
+                .findByIdAndVendor(foodItemId,vendor)
+                .orElseThrow(() ->
+                        new RuntimeException("Food Item not found"));
+
+        foodItemRepo.delete(foodItem);
+
+        return "Food Item deleted successfully";
+    }
+
+    private Vendor getCurrentVendor() {
+
         Authentication authentication =
                 SecurityContextHolder
                         .getContext()
@@ -198,15 +188,7 @@ public class FoodItemService {
                 .orElseThrow(() ->
                         new RuntimeException("Vendor not found"));
 
-        FoodItem foodItem = foodItemRepo
-                .findByIdAndVendor(foodItemId, vendor)
-                .orElseThrow(() ->
-                        new RuntimeException("Food Item not found"));
 
-        foodItem.setAvailable(true);
-
-        foodItemRepo.save(foodItem);
-
-        return foodItem.getFoodName() + " enabled successfully";
+         return vendor;
     }
 }

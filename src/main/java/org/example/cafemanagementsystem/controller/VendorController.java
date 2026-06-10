@@ -1,10 +1,7 @@
 package org.example.cafemanagementsystem.controller;
-
 import org.example.cafemanagementsystem.dto.AddFoodItemDto;
 import org.example.cafemanagementsystem.dto.FoodItemResponseDto;
 import org.example.cafemanagementsystem.dto.VendorRequestDto;
-import org.example.cafemanagementsystem.entity.FoodItem;
-import org.example.cafemanagementsystem.entity.Vendor;
 import org.example.cafemanagementsystem.service.FoodItemService;
 import org.example.cafemanagementsystem.service.VendorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +72,15 @@ public class VendorController {
         return foodItemService.enableFoodItem(id);
     }
 
+
+
+
+    @DeleteMapping("/menu/delete/{id}")
+    @PreAuthorize("hasAuthority('VENDOR')")
+    public String deleteFoodItem(@PathVariable Long id) {
+
+        return foodItemService.deleteFoodItem(id);
+    }
 
 
 
